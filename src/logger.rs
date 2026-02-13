@@ -8,29 +8,29 @@ pub struct Logger {
 
 impl Logger {
     pub fn new(level:Level) -> Self {
-        Self{ level }
+        return Self{ level };
     }
 
     pub fn debug(&self, message:&str){
-        self.log(Level::Debug, message)
+        self.log(Level::Debug, message);
     }
     pub fn info(&self, message:&str){
-        self.log(Level::Info, message)
+        self.log(Level::Info, message);
     }
     pub fn warn(&self, message:&str){
-        self.log(Level::Warn, message)
+        self.log(Level::Warn, message);
     }
     pub fn error(&self, message:&str){
-        self.log(Level::Error, message)
+        self.log(Level::Error, message);
     }
     pub fn fatal(&self, message:&str){
-        self.log(Level::Fatal, message)
-        process::exit(1)
+        self.log(Level::Fatal, message);
+        process::exit(1);
     }
 
     fn log(&self, level:Level, message : &str){
         if self.level <= level {
-            println!("[{:?}] {}", level, message)
+            println!("[{:?}] {}", level, message);
         }
     }
 }
