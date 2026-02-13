@@ -5,26 +5,25 @@ pub struct Logger {
     level : Level
 }
 
-
 impl Logger {
     pub fn new(level:Level) -> Self {
-        return Self{ level };
+        Self{ level }
     }
 
-    pub fn debug(&self, message:&str){
-        self.log(Level::Debug, message);
+    pub fn debug(&self, message: impl AsRef<str>){
+        self.log(Level::Debug, message.as_ref());
     }
-    pub fn info(&self, message:&str){
-        self.log(Level::Info, message);
+    pub fn info(&self, message: impl AsRef<str>){
+        self.log(Level::Info, message.as_ref());
     }
-    pub fn warn(&self, message:&str){
-        self.log(Level::Warn, message);
+    pub fn warn(&self, message: impl AsRef<str>){
+        self.log(Level::Warn, message.as_ref());
     }
-    pub fn error(&self, message:&str){
-        self.log(Level::Error, message);
+    pub fn error(&self, message:impl AsRef<str>){
+        self.log(Level::Error, message.as_ref());
     }
-    pub fn fatal(&self, message:&str){
-        self.log(Level::Fatal, message);
+    pub fn fatal(&self, message:impl AsRef<str>){
+        self.log(Level::Fatal, message.as_ref());
         process::exit(1);
     }
 
