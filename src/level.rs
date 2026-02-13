@@ -1,5 +1,5 @@
 
-#[derive(PartialEq,PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd)]
 pub enum Level{
     Debug,
     Info,

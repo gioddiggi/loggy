@@ -1,3 +1,8 @@
+use loggy::level::Level;
+use loggy::logger::Logger;
+
+
 fn main(){
-    print!("Hello loggy")
+    let logger = Logger::new(Level::Debug);
+    logger.debug("Hello loggy");
 }
