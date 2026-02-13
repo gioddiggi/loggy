@@ -1,13 +1,15 @@
 use crate::level::Level;
+use crate::output::LogOutput;
 use std::process;
 
-pub struct Logger {
-    level : Level
+pub struct Logger<O: LogOutput> {
+    level : Level,
+    output : O,
 }
 
-impl Logger {
-    pub fn new(level:Level) -> Self {
-        Self{ level }
+impl <O: LogOutput> Logger<O> {
+    pub fn new(level : Level, output : O) -> Self {
+        Self{ level, output }
     }
 
     pub fn debug(&self, message: impl AsRef<str>){
@@ -27,9 +29,9 @@ impl Logger {
         process::exit(1);
     }
 
-    fn log(&self, level:Level, message : &str){
+    fn log(&self, level : Level, message:&str){
         if self.level <= level {
-            println!("[{:?}] {}", level, message);
+            self.output.log(level, message);
         }
     }
 }
