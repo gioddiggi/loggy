@@ -1,12 +1,21 @@
+use loggy::file::FileLogger;
 use loggy::logger::Logger;
-use loggy::console::ConsoleLogger;
 use loggy::level::Level;
 
 // TODO: File is just for test, must provide examples dir later on
-fn main(){
-    let console_logger = ConsoleLogger{};
-    let logger = Logger::new(Level::Debug, console_logger);
-    let name  = "Giovanni";
+fn main() -> std::io::Result<()> {
+
+    let logger : Logger<FileLogger>;
+
+    let open_file_result = FileLogger::new("loggy.log");
+
+    match open_file_result {
+        Ok(v)=> {logger = Logger::new(Level::Debug, v);}
+        Err(e) => { panic!("Could not open file : {:?}", e)}
+    }
+
+    let name = "Giovanni";
     logger.info(format!("User {} logged in", name));
+
+    Ok(())
 }
- 

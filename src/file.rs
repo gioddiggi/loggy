@@ -1,0 +1,33 @@
+use std::fs::{File, OpenOptions};
+use std::io::{self, Write, BufWriter};
+use std::sync::Mutex;
+
+use crate::output::LogOutput;
+
+pub struct FileLogger {
+    file: Mutex<BufWriter<File>>,
+}
+
+impl FileLogger {
+    pub fn new(path: &str) -> io::Result<Self> {
+        let file = OpenOptions::new()
+            .append(true)
+            .create(true)
+            .open(path)?;
+
+        Ok(Self {
+            file: Mutex::new(BufWriter::new(file)),
+        })
+    }
+}
+
+impl LogOutput for FileLogger {
+    fn log(&self, level: crate::level::Level, message: &str) {
+        let mut file = match self.file.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => poisoned.into_inner(),
+        };
+
+        let _ = writeln!(file, "[{:?}] {}", level, message);
+    }
+}
