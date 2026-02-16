@@ -22,12 +22,12 @@ impl FileLogger {
 }
 
 impl LogOutput for FileLogger {
-    fn log(&self, level: crate::level::Level, message: &str) {
+    fn log(&self, level: crate::level::Level, timestamp : &str, message: &str) {
         let mut file = match self.file.lock() {
             Ok(guard) => guard,
             Err(poisoned) => poisoned.into_inner(),
         };
 
-        let _ = writeln!(file, "[{:?}] {}", level, message);
+        let _ = writeln!(file, "{} [{:?}] {}", timestamp, level, message);
     }
 }
