@@ -1,6 +1,6 @@
 use serde_json::json;
 use crate::formatter::LogFormatter;
-use crate::record::LogRecord;
+use super::LogRecord;
 pub struct JsonFormatter;
 
 impl<'a> LogFormatter for JsonFormatter {

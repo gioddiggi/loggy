@@ -1,5 +1,4 @@
 use crate::output::LogOutput;
-use crate::record::LogRecord;
 
 pub struct ConsoleLogger{}
 

@@ -1,4 +1,3 @@
-use core::fmt;
 use serde::Serialize;
 use chrono::{DateTime, Utc};
 

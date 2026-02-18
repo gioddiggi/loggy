@@ -1,5 +1,5 @@
 use crate::formatter::LogFormatter;
-use crate::record::LogRecord;
+use super::LogRecord;
 
 pub struct PlainTextFormatter;
 

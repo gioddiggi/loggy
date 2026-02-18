@@ -1,7 +1,7 @@
 use loggy::file::FileLogger;
 use loggy::logger::Logger;
 use loggy::level::Level;
-use loggy::json::JsonFormatter;
+use loggy::formatter::JsonFormatter;
 // TODO: File is just for test, must provide examples dir later on
 fn main() -> std::io::Result<()> {
 

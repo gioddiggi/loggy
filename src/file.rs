@@ -3,7 +3,6 @@ use std::io::{self, Write, BufWriter};
 use std::sync::Mutex;
 
 use crate::output::LogOutput;
-use crate::record::LogRecord;
 
 pub struct FileLogger {
     file: Mutex<BufWriter<File>>,
