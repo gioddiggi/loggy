@@ -9,7 +9,7 @@ pub mod plain_text;
 pub use json::JsonFormatter;
 pub use plain_text::PlainTextFormatter;
 
-use crate::record::LogRecord;
+use crate::core::LogRecord;
 
 /// Trait for formatting log records into strings.
 ///
@@ -21,13 +21,13 @@ use crate::record::LogRecord;
 /// ```
 /// struct SimpleFormatter;
 ///
-/// impl LogFormatter for SimpleFormatter {
+/// impl Formatter for SimpleFormatter {
 ///     fn format(&self, record: LogRecord) -> String {
 ///         format!("[{}] {}: {}", record.timestamp, record.level as u8, record.message)
 ///     }
 /// }
 /// ```
-pub trait LogFormatter {
+pub trait Formatter {
     /// Formats a `LogRecord` into a `String` for output.
     ///
     /// # Arguments
@@ -37,5 +37,5 @@ pub trait LogFormatter {
     /// # Returns
     ///
     /// A `String` representing the formatted log message.
-    fn format(&self, record: LogRecord) -> String;
+    fn format(&self, record: &LogRecord) -> String;
 }

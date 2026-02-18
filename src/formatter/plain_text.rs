@@ -1,4 +1,4 @@
-use crate::formatter::LogFormatter;
+use crate::formatter::Formatter;
 use super::LogRecord;
 
 /// A log formatter that outputs log records in plain text format.
@@ -21,7 +21,7 @@ use super::LogRecord;
 /// ```
 pub struct PlainTextFormatter;
 
-impl LogFormatter for PlainTextFormatter {
+impl Formatter for PlainTextFormatter {
     /// Formats a `LogRecord` as a plain text string.
     ///
     /// The output format is:
@@ -34,7 +34,7 @@ impl LogFormatter for PlainTextFormatter {
     /// # Returns
     ///
     /// A `String` containing the log record in plain text format.
-    fn format(&self, record: LogRecord) -> String {
+    fn format(&self, record: &LogRecord) -> String {
         format!(
             "[{}] {:?}: {}",
             record.timestamp.to_rfc3339(),

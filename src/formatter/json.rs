@@ -1,5 +1,5 @@
 use serde_json::json;
-use crate::formatter::LogFormatter;
+use crate::formatter::Formatter;
 use super::LogRecord;
 
 /// A log formatter that outputs log records in JSON format.
@@ -21,7 +21,7 @@ use super::LogRecord;
 /// ```
 pub struct JsonFormatter;
 
-impl<'a> LogFormatter for JsonFormatter {
+impl<'a> Formatter for JsonFormatter {
     /// Formats a `LogRecord` as a JSON string.
     ///
     /// The output includes the following fields:
@@ -36,7 +36,7 @@ impl<'a> LogFormatter for JsonFormatter {
     /// # Returns
     ///
     /// A `String` containing the log record serialized as JSON.
-    fn format(&self, record: LogRecord) -> String {
+    fn format(&self, record: &LogRecord) -> String {
         let obj = json!({
             "level": format!("{:?}", record.level),
             "message": record.message,
