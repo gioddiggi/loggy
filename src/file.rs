@@ -29,6 +29,6 @@ impl LogOutput for FileLogger {
             Err(poisoned) => poisoned.into_inner(),
         };
 
-        let _ = writeln!(file, "{} [{:?}] {}", record.timestamp, record.level, record.message);
+        let _ = writeln!(file, "{}", record);
     }
 }
