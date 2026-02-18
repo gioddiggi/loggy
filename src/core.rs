@@ -1,7 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use crate::sink::Sink;
+use std::fmt::{self, Display};
 use std::process;
+use std::collections::HashMap;
 use crate::formatter::Formatter;
 
 
@@ -30,15 +32,31 @@ pub struct LogRecord<'a> {
     pub message: &'a str,
     /// The exact time (UTC) the record was created.
     pub timestamp: DateTime<Utc>,
+    pub extras : HashMap<String, String>
+}
+
+
+impl fmt::Display for Level {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            Level::Debug => "DEBUG",
+            Level::Info  => "INFO",
+            Level::Warn  => "WARN",
+            Level::Error => "ERROR",
+            Level::Fatal => "FATAL",
+        };
+        write!(f, "{}", s)
+    }
 }
 
 impl<'a> LogRecord<'a> {
     /// Creates a new `LogRecord` with the current UTC timestamp.
-    pub fn new(level: Level, message: &'a str) -> Self {
+    pub fn new(level: Level, message: &'a str, extras : HashMap<String, String>) -> Self {
         Self {
             level,
             message,
             timestamp: Utc::now(),
+            extras
         }
     }
 }
@@ -52,6 +70,7 @@ pub struct Logger<S: Sink, F: Formatter> {
     min_level: Level,
     sink: S,
     formatter: F,
+    extras: HashMap<String, String>
 }
 
 impl<S: Sink, F: Formatter> Logger<S, F> {
@@ -61,8 +80,55 @@ impl<S: Sink, F: Formatter> Logger<S, F> {
             min_level,
             sink,
             formatter,
+            extras: HashMap::new()
         }
     }
+
+
+    /// Adds an extra key–value pair to the logger.
+    ///
+    /// Both the key and value can be any type that can be converted into a
+    /// [`String`], such as `&str`, `String`, or the result of `format!`.
+    ///
+    /// This method takes ownership of the provided values. If a `String` is
+    /// passed, it will be moved without additional allocation. If a `&str` is
+    /// passed, it will be copied into a new `String`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut logger = Logger::new();
+    ///
+    /// logger.add_extra("user_id", "42");
+    ///
+    /// let request_id = String::from("abc-123");
+    /// logger.add_extra("request_id", request_id);
+    ///
+    /// logger.add_extra("duration_ms", format!("{}", 150));
+    /// ```
+    pub fn add_extra(&mut self, k: impl Into<String>, v: impl Into<String>) {
+        self.extras.insert(k.into(), v.into());
+    }
+
+    /// Removes an extra field from the logger by key.
+    ///
+    /// If the key exists in the `extras` map, the corresponding
+    /// entry is removed. If the key does not exist, this method
+    /// does nothing.
+    ///
+    /// # Arguments
+    ///
+    /// * `k` - The key of the extra field to remove.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// logger.remove_extra("request_id");
+    /// ```
+    pub fn remove_extra(&mut self, k: &str){
+        self.extras.remove(k);
+    }
+
 
     /// Logs a message at the `Debug` level.
     pub fn debug(&self, message: impl AsRef<str>) {
@@ -97,7 +163,7 @@ impl<S: Sink, F: Formatter> Logger<S, F> {
     fn dispatch(&self, level: Level, message: &str) {
         if level >= self.min_level {
             // LogRecord is created here to capture the timestamp at the moment of logging
-            let record = LogRecord::new(level, message);
+            let record = LogRecord::new(level, message, self.extras.clone());
             let formatted_msg = self.formatter.format(&record);
             self.sink.write(&formatted_msg);
         }

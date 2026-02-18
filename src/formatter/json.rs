@@ -40,7 +40,8 @@ impl<'a> Formatter for JsonFormatter {
         let obj = json!({
             "level": format!("{:?}", record.level),
             "message": record.message,
-            "timestamp": record.timestamp.to_rfc3339()
+            "timestamp": record.timestamp.to_rfc3339(),
+            "extras" : record.extras
         });
         obj.to_string()
     }
