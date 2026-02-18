@@ -3,6 +3,7 @@ use std::io::{self, Write, BufWriter};
 use std::sync::Mutex;
 
 use crate::output::LogOutput;
+use crate::record::LogRecord;
 
 pub struct FileLogger {
     file: Mutex<BufWriter<File>>,
@@ -22,12 +23,12 @@ impl FileLogger {
 }
 
 impl LogOutput for FileLogger {
-    fn log(&self, level: crate::level::Level, timestamp : &str, message: &str) {
+    fn log(&self, record : LogRecord) {
         let mut file = match self.file.lock() {
             Ok(guard) => guard,
             Err(poisoned) => poisoned.into_inner(),
         };
 
-        let _ = writeln!(file, "{} [{:?}] {}", timestamp, level, message);
+        let _ = writeln!(file, "{} [{:?}] {}", record.timestamp, record.level, record.message);
     }
 }

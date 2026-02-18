@@ -1,6 +1,8 @@
+use chrono::Utc;
+
 use crate::level::Level;
 use crate::output::LogOutput;
-use crate::time::current_timestamp;
+use crate::record::LogRecord;
 use std::process;
 
 pub struct Logger<O: LogOutput> {
@@ -32,7 +34,12 @@ impl <O: LogOutput> Logger<O> {
 
     fn log(&self, level : Level, message:&str){
         if self.level <= level {
-            self.output.log(level,current_timestamp().as_str() ,message);
+            let record = LogRecord{
+                level,
+                message,
+                timestamp: Utc::now(),
+            };
+            self.output.log(record);
         }
     }
 }

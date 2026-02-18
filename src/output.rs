@@ -1,5 +1,5 @@
-use crate::level::Level;
+use crate::{record::LogRecord};
 pub trait LogOutput {
-    fn log(&self, level: Level, timestamp: &str, message: &str);
+    fn log(&self, record:LogRecord);
 }
 
