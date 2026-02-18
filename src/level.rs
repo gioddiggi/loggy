@@ -1,6 +1,6 @@
+use serde::Serialize;
 
-
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd,Serialize)]
 pub enum Level{
     Debug,
     Info,

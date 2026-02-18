@@ -23,12 +23,12 @@ impl FileLogger {
 }
 
 impl LogOutput for FileLogger {
-    fn log(&self, record : LogRecord) {
+    fn log(&self, msg : &str) {
         let mut file = match self.file.lock() {
             Ok(guard) => guard,
             Err(poisoned) => poisoned.into_inner(),
         };
 
-        let _ = writeln!(file, "{}", record);
+        let _ = writeln!(file, "{}", msg);
     }
 }

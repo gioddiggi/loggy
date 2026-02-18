@@ -1,18 +1,18 @@
-use chrono::Utc;
-
+use crate::formatter::LogFormatter;
 use crate::level::Level;
 use crate::output::LogOutput;
 use crate::record::LogRecord;
 use std::process;
 
-pub struct Logger<O: LogOutput> {
+pub struct Logger<O: LogOutput, F: LogFormatter> {
     level : Level,
+    formatter: F,
     output : O,
 }
 
-impl <O: LogOutput> Logger<O> {
-    pub fn new(level : Level, output : O) -> Self {
-        Self{ level, output }
+impl <O: LogOutput, F: LogFormatter> Logger<O, F> {
+    pub fn new(level : Level, output : O, formatter : F) -> Self {
+        Self{ level, output, formatter}
     }
 
     pub fn debug(&self, message: impl AsRef<str>){
@@ -33,13 +33,13 @@ impl <O: LogOutput> Logger<O> {
     }
 
     fn log(&self, level : Level, message:&str){
-        if self.level <= level {
-            let record = LogRecord{
+        if level >= self.level {
+            let record = LogRecord {
                 level,
                 message,
-                timestamp: Utc::now(),
+                timestamp: chrono::Utc::now(),
             };
-            self.output.log(record);
+            self.output.log(self.formatter.format(record).as_str());
         }
     }
 }
