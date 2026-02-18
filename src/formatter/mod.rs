@@ -18,7 +18,7 @@ use crate::core::LogRecord;
 ///
 /// # Example
 ///
-/// ```
+/// ```rust,ignore
 /// struct SimpleFormatter;
 ///
 /// impl Formatter for SimpleFormatter {

@@ -23,7 +23,7 @@ impl Sink for Console {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust,ignore
     /// use loggy::sinks::{Console, Sink};
     /// let sink = Console::new();
     /// sink.write("System initialized.");

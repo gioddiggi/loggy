@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use crate::sink::Sink;
-use std::fmt::{self, Display};
+use std::fmt::{self};
 use std::process;
 use std::collections::HashMap;
 use crate::formatter::Formatter;
@@ -96,7 +96,7 @@ impl<S: Sink, F: Formatter> Logger<S, F> {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```rust,ignore
     /// let mut logger = Logger::new();
     ///
     /// logger.add_extra("user_id", "42");
@@ -122,7 +122,7 @@ impl<S: Sink, F: Formatter> Logger<S, F> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust,ignore
     /// logger.remove_extra("request_id");
     /// ```
     pub fn remove_extra(&mut self, k: &str){

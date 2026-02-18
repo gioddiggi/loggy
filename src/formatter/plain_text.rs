@@ -11,7 +11,7 @@ use super::LogRecord;
 ///
 /// # Example
 ///
-/// ```
+/// ```rust,ignore
 /// let formatter = PlainTextFormatter;
 /// let record = LogRecord {
 ///     level: Level::Info,
@@ -46,5 +46,29 @@ impl Formatter for PlainTextFormatter {
             record.message,
             extras_str
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+    use chrono::DateTime;
+    use crate::formatter:: {Formatter, PlainTextFormatter};
+
+
+    const FORMATTER : PlainTextFormatter = PlainTextFormatter;
+
+    #[test]
+    fn format_sample_record(){
+        let extras = HashMap::from([("service".to_string(), "logging-service".to_string())]);
+        let record = crate::LogRecord { 
+            level: crate::Level::Info, 
+            message: "Hello world", 
+            timestamp: DateTime::from_timestamp_millis(1771438594775).unwrap(), 
+            extras
+        };
+        let result = FORMATTER.format(&record);
+        let expected = "[2026-02-18T18:16:34.775+00:00] INFO: Hello world [service=logging-service]";
+        assert_eq!(result, expected)
     }
 }

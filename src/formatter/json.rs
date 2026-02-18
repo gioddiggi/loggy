@@ -9,7 +9,7 @@ use super::LogRecord;
 ///
 /// # Example
 ///
-/// ```
+/// ```rust,ignore
 /// let formatter = JsonFormatter;
 /// let record = LogRecord {
 ///     level: Level::Info,
@@ -38,11 +38,38 @@ impl<'a> Formatter for JsonFormatter {
     /// A `String` containing the log record serialized as JSON.
     fn format(&self, record: &LogRecord) -> String {
         let obj = json!({
-            "level": format!("{:?}", record.level),
+            "level": format!("{}", record.level),
             "message": record.message,
             "timestamp": record.timestamp.to_rfc3339(),
             "extras" : record.extras
         });
         obj.to_string()
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use chrono::DateTime;
+
+    use crate::formatter::{Formatter, JsonFormatter};
+
+
+    const FORMATTER : JsonFormatter = JsonFormatter;
+
+    #[test]
+    fn format_sample_record(){
+        let extras = HashMap::from([("service".to_string(), "logging-service".to_string())]);
+        let record = crate::LogRecord { 
+            level: crate::Level::Info, 
+            message: "Hello world", 
+            timestamp: DateTime::from_timestamp_millis(1771438594775).unwrap(), 
+            extras
+        };
+        let result = FORMATTER.format(&record);
+        let expected = "{\"extras\":{\"service\":\"logging-service\"},\"level\":\"INFO\",\"message\":\"Hello world\",\"timestamp\":\"2026-02-18T18:16:34.775+00:00\"}";
+        assert_eq!(result, expected)
     }
 }

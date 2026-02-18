@@ -1,5 +1,5 @@
 use loggy::{Logger, Level};
-use loggy::formatter::{JsonFormatter, PlainTextFormatter};
+use loggy::formatter::{PlainTextFormatter};
 use loggy::sink::Console;
 
 
